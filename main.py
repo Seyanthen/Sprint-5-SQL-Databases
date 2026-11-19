@@ -5,7 +5,7 @@
 """
 
 import sqlite3
-print("sqlite3 imported.\n")
+from pathlib import Path
 
 # 1. Design the SQLite database schema.
 #    - Choose the database file location.
@@ -13,9 +13,48 @@ print("sqlite3 imported.\n")
 #      appropriate data types, and validation constraints.
 #    - Initialize the tables when the program starts and enable foreign keys.
 
+DATABASE_PATH = Path(__file__).parent / "movies.db"
 
 
+def get_connection():
+    """Create a connection to the SQLite database."""
+    connection = sqlite3.connect(DATABASE_PATH)
+    connection.row_factory = sqlite3.Row  # Enable named column access
+    connection.execute("PRAGMA foreign_keys = ON")  # Enable foreign key support
+    return connection
 
+
+def initialize_database():
+    """Initialize the database schema if it doesn't exist."""
+    with get_connection() as connection:
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS movies (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL CHECK (length(trim(title)) > 0),
+                release_year INTEGER,
+                genre TEXT
+            )
+        """)
+
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS ratings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                movie_id INTEGER NOT NULL,
+                rating INTEGER NOT NULL CHECK(rating BETWEEN 1 AND 5),
+                watched_date TEXT,
+                UNIQUE(movie_id),
+                FOREIGN KEY (movie_id)
+                    REFERENCES movies(id)
+                    ON DELETE CASCADE
+            )
+        """)
+
+
+# Initialize the database when program starts
+if __name__ == "__main__":
+    initialize_database()
+    print(f"Database initialized at {DATABASE_PATH}")
+    
 
 # 2. Implement database queries.
 #    - Retrieve all movies, individual movies, and movies searched by title or genre.
@@ -27,7 +66,7 @@ print("sqlite3 imported.\n")
 
 
 # 3. Add movies and ratings.
-#    - Validate required movie fields and rating values from 1 to 10.
+#    - Validate required movie fields and rating values from 1 to 5.
 #    - Insert movies and ratings with parameterized SQL statements.
 #    - Use transactions, commit successful inserts, and roll back failures.
 

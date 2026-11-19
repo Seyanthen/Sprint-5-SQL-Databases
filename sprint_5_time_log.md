@@ -29,10 +29,10 @@ The expected minimum amount of time each Sprint for each category is as follows:
 |11-16-26|11:15|MTG|Planning Meeting|60|
 |11-16-26|11:15|IM |Planning Meeting|45|
 |11-16-26|11:15|TP |Planning Meeting|60|
-|11-17-26|10:25|IM |Environment Configuration|45|
-||||||
-||||||
-||||||
+|11-17-26|10:25|IM |Environment Configuration|40|
+|11-18-26|10:15|TP |Team Project Work Day|60|
+|11-18-26|11:15|TP |Troubleshooting (Check Harden PayAttention Backend Codex Chat)|15|
+|11-18-26|8:45 |IM |SQLite Database Schema|45|
 ||||||
 ||||||
 ||||||
@@ -57,7 +57,7 @@ _Note: Add more rows as needed._
 
 |Categroy                       |Total Time (Hours:Minutes)|
 |-------------------------------|:------------------------:|
-|IM - Individual Module         |                          |
-|TP - Team Project              |                          |
-|MTG - Class Meetings           |                          |
-|**TOTAL**                      |                          |
+|IM - Individual Module         |          02:10           |
+|TP - Team Project              |          01:15           |
+|MTG - Class Meetings           |          01:00           |
+|**TOTAL**                      |        **04:25**         |

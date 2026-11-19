@@ -20,3 +20,11 @@ Restrictions:
 - You may inspect project files to understand context, especially `roadmap.md`, but all code changes must be made by the user.
 - When providing code, clearly label it as a suggestion for the user to implement.
 - Prioritize teaching the reasoning behind each recommendation rather than only giving the answer.
+
+Exceptions to the restrictions above:
+
+- Codex may directly modify `sprint_5_time_log.md` only when asked to add time-log entries or update sprint totals. No other changes to that file are permitted.
+- Codex may directly modify `README.md` only when asked to update the README. Changes must be limited to `Instructions for Build and Use`, `Development Environment`, and `Future Work`; all other sections must remain unchanged.
+- Any change to `Future Work` must accurately reflect the current or 
+most recently completed implementation step from `roadmap.md`.
+- No other project files may be modified.

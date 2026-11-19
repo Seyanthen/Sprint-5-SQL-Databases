@@ -8,7 +8,7 @@ Project Requirements:
 4. Software should update data from the database.
 5. Software should delete data from the database.
 
-Stretch Challenges (select one):
+Stretch Challenge:
 - Use at least two of the aggregate functions to summarize numerical data in your database.
 
 
@@ -16,32 +16,23 @@ Stretch Challenges (select one):
 
 Steps to build and/or run the software:
 
-1. First step here
-2.
-3.
+1. Install Python 3.x if it is not already installed.
+2. From the project directory, run `python main.py`.
+3. The program creates the local `movies.db` SQLite database and initializes the `movies` and `ratings` tables.
 
 Instructions for using the software:
 
-1. First step here
-2.
-3.
+1. Run `python main.py` to initialize the database.
+2. Step 1 currently provides database setup only; movie queries and data-entry commands will be added in later roadmap steps.
+3. Do not commit the generated `movies.db` file to source control.
 
 ## Development Environment
 
-Guidance
-You should consider using Python and ulLite for this module. SQLite is already support in Python by importing the sqlite3 library.
+To recreate the development environment, you need the following software and/or libraries:
 
-Here is a list of websites that you might find useful when working in the suggested environment:
-
-[SQLite Tutorial](https://www.sqlitetutorial.net/)
-[Python sqlite3](https://docs.python.org/3.13/library/sqlite3.html)
-[TutorialsPoint: SQLite - Python](https://www.tutorialspoint.com/sqlite/sqlite_python.htm)
-
-To recreate the development environment, you need the following software and/or libraries with the specified versions:
-
-* First thing here
-*
-*
+* Python 3.x
+* Python's built-in `sqlite3` library
+* SQLite database support, included with Python
 
 ## Useful Websites to Learn More
 
@@ -49,11 +40,18 @@ I found these websites useful in developing this software:
 
 * [W3Schools SQL Tutorial](https://www.w3schools.com/sql/)
 * [SQL Database Wiki](https://en.wikipedia.org/wiki/Relational_database)
+* [SQLite Tutorial](https://www.sqlitetutorial.net/)
+* [Python sqlite3](https://docs.python.org/3.13/library/sqlite3.html)
+* [TutorialsPoint: SQLite - Python](https://www.tutorialspoint.com/sqlite/sqlite_python.htm)
 
 ## Future Work
 
-The following items I plan to fix, improve, and/or add to this project in the future:
+The following items reflect the current roadmap status and planned improvements:
 
-* [ ] Web Interface
-* [ ] Movie Posters on Web Interface
-* [ ]
+* [x] Step 1: Create the SQLite database schema and initialization function
+* [ ] Step 2: Add database query functions
+* [ ] Step 3: Add movies and ratings
+* [ ] Step 4: Update existing movies and ratings
+* [ ] Step 5: Delete movies and ratings
+* [ ] Step 6: Add aggregate rating summaries using `AVG` and `COUNT`
+* [ ] Step 7: Add an optional web interface and movie posters
