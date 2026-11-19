@@ -27,4 +27,7 @@ Exceptions to the restrictions above:
 - Codex may directly modify `README.md` only when asked to update the README. Changes must be limited to `Instructions for Build and Use`, `Development Environment`, and `Future Work`; all other sections must remain unchanged.
 - Any change to `Future Work` must accurately reflect the current or 
 most recently completed implementation step from `roadmap.md`.
+- Codex may directly modify `roadmap.md` when explicitly asked by the user.
+- Changes to `roadmap.md` must be limited to documenting roadmap status, clarifying implementation steps, or adjusting testing checkpoints.
+- Codex must preserve existing roadmap requirements unless the user explicitly requests a requirement change.
 - No other project files may be modified.

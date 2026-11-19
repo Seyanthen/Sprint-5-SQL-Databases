@@ -61,16 +61,68 @@ if __name__ == "__main__":
 #    - Join movies and ratings when displaying rating information.
 #    - Handle empty databases and missing movie IDs gracefully.
 
+def get_all_movies():
+    """Return all movies with their ratings."""
+    with get_connection() as connection:
+        cursor = connection.execute("""
+            SELECT
+                movies.id,
+                movies.title,
+                movies.release_year,
+                movies.genre,
+                ratings.rating,
+                ratings.watched_date
+            FROM movies
+            LEFT JOIN ratings ON ratings.movie_id = movies.id
+            ORDER BY movies.title
+        """)
+        return cursor.fetchall()
 
 
+def get_movie_by_id(movie_id):
+    """Return one movie with rating information, or None."""
+    with get_connection() as connection:
+        cursor = connection.execute("""
+            SELECT
+                movies.id,
+                movies.title,
+                movies.release_year,
+                movies.genre,
+                ratings.rating,
+                ratings.watched_date
+            FROM movies
+            LEFT JOIN ratings ON ratings.movie_id = movies.id
+            WHERE movies.id = ?
+        """, (movie_id,))
+        return cursor.fetchone()
+
+
+def search_movies(search_term):
+    """Search movie titles or genres"""
+    pattern = f"%{search_term}%"
+
+    with get_connection() as connection:
+        cursor = connection.execute("""
+            SELECT
+                movies.id,
+                movies.title,
+                movies.release_year,
+                movies.genre,
+                ratings.rating,
+                ratings.watched_date
+            FROM movies
+            LEFT JOIN ratings ON ratings.movie_id = movies.id
+            WHERE movies.title LIKE ?
+               OR movies.genre LIKE ?
+            ORDER BY movies.title
+        """, (pattern, pattern))
+        return cursor.fetchall()
 
 
 # 3. Add movies and ratings.
 #    - Validate required movie fields and rating values from 1 to 5.
 #    - Insert movies and ratings with parameterized SQL statements.
-#    - Use transactions, commit successful inserts, and roll back failures.
-
-
+#    - Use transactions, commit successful inserts, and roll back failures.   
 
 
 

@@ -11,7 +11,7 @@ This roadmap describes the planned implementation for the Python and SQLite movi
 - Decide on the database file location, such as `movies.db` in the project directory.
 - Create a `movies` table with fields such as `id`, `title`, `release_year`, and `genre`.
 - Create a `ratings` table with fields such as `id`, `movie_id`, `rating`, and `watched_date` if separating ratings from movie records.
-- Add primary keys, foreign keys, appropriate data types, and validation constraints such as a rating range from 1 to 10.
+- Add primary keys, foreign keys, appropriate data types, and validation constraints such as a rating range from 1 to 5.
 - Write an initialization function that creates the tables when the program starts.
 
 **Relevant considerations:** Use Python's built-in `sqlite3` module, parameterized SQL statements, and a connection helper that closes connections safely. Enable foreign-key enforcement with `PRAGMA foreign_keys = ON` when related tables are used.
@@ -55,6 +55,19 @@ This roadmap describes the planned implementation for the Python and SQLite movi
 **Requirement satisfied:** Provides software that adds new data to the database.
 
 **Suggested files or modules:** Add insert functions to `movie_repository.py` or `database.py`; add input validation to `main.py` or a separate `validation.py` module.
+
+### Step 2 Query Testing Checkpoint
+
+After Step 3 adds movie and rating insertion functions, test the Step 2 query functions with:
+
+- An empty database.
+- Movies with and without ratings.
+- Existing and nonexistent movie IDs.
+- Partial title and genre searches.
+- Searches with no matches.
+- Case-insensitive searches where supported by SQLite.
+- Alphabetical ordering.
+- SQL-injection-safe search values using parameterized queries.
 
 ## 4. Update Existing Movies and Ratings
 
