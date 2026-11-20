@@ -34,7 +34,7 @@ The expected minimum amount of time each Sprint for each category is as follows:
 |11-18-26|11:15|TP |Troubleshooting (Check Harden PayAttention Backend Codex Chat)|15|
 |11-18-26|8:45 |IM |SQLite Database Schema|45|
 |11-19-26|1:30 |IM |Database Queries|45|
-|11-19-26|6:45 |IM |Connection Lifecycle & Database Adding|60|
+|11-19-26|6:45 |IM |Connection Lifecycle & Database Adding|65|
 ||||||
 ||||||
 ||||||
