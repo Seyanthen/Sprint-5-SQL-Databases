@@ -161,14 +161,69 @@ def add_rating(movie_id, rating, watched_date=None):
         )
 
 
-
-
 # 4. Update existing movies and ratings.
 #    - Update movie details and ratings by record ID.
 #    - Validate changed values and report when a target record does not exist.
 
+def update_movie(movie_id, title, release_year=None, genre=None):
+    """Update a movie and return True if it existed."""
+    if not isinstance(title, str) or not title.strip():
+        raise ValueError("Movie title must be a non-empty string.")
+
+    if genre is not None and not isinstance(genre, str):
+        raise ValueError("Genre must be a string or None.")
+
+    with get_connection() as connection:
+        cursor = connection.execute("""
+            UPDATE movies
+            SET title = ?, release_year = ?, genre = ?
+            WHERE id = ?
+        """, (
+            title.strip(),
+            release_year,
+            genre.strip() if genre else None,
+            movie_id
+        ))
+
+        return cursor.rowcount == 1
 
 
+_UNSET = object()  # Sentinel value for optional parameters
+def update_rating(rating_id, rating, watched_date=_UNSET):
+    """Update a rating and return True if it existed."""
+    if type(rating) is not int or not 1 <= rating <= 5:
+        raise ValueError("Rating must be an integer from 1 to 5.")
+
+    if watched_date is not _UNSET:
+        if watched_date is not None and not isinstance(watched_date, str):
+            raise ValueError("Watched date must be a string or None.")
+
+    with get_connection() as connection:
+        if watched_date is _UNSET:
+            cursor = connection.execute("""
+                UPDATE ratings
+                SET rating = ?
+                WHERE id = ?
+            """, (
+                rating,
+                rating_id
+            ))
+
+        else:
+            cursor = connection.execute("""
+                UPDATE ratings
+                SET rating = ?, watched_date = ?
+                WHERE id = ?
+            """, (
+                rating,
+                watched_date,
+                rating_id
+            ))
+
+        return cursor.rowcount == 1
+
+
+# Temporary test cases:
 
 
 # 5. Delete movies and ratings.

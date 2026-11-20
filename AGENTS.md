@@ -31,3 +31,11 @@ most recently completed implementation step from `roadmap.md`.
 - Changes to `roadmap.md` must be limited to documenting roadmap status, clarifying implementation steps, or adjusting testing checkpoints.
 - Codex must preserve existing roadmap requirements unless the user explicitly requests a requirement change.
 - No other project files may be modified.
+
+Testing permissions:
+
+- Codex may run non-destructive tests, linters, type checks, and read-only diagnostics after the user implements code.
+- Codex may create temporary test databases, temporary files, or test output outside the project source files, provided those artifacts are cleaned up afterward.
+- Codex must not modify, create, or delete project source files or test files unless explicitly permitted by the exceptions above.
+- Tests must use an isolated temporary database rather than the project's persistent `movies.db` file.
+- Tests may copy from the project's persistent `movies.db` file to create an isolated temporary database.

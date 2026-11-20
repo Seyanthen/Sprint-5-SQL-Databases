@@ -2,6 +2,10 @@
 
 This roadmap describes the planned implementation for the Python and SQLite movie-rating platform. The current repository contains a starter `main.py` with the `sqlite3` import and a `README.md` with the project requirements, so the implementation can be built incrementally from that starting point.
 
+## Current Status
+
+Steps 1–4 are implemented. Step 4 has been verified with isolated assert-based tests covering successful updates, invalid input, nonexistent IDs, rating date preservation, and date clearing. The next implementation step is Step 5: deleting movies and ratings safely.
+
 ## 1. Design the SQLite Database Schema
 
 **Goal:** Create a persistent SQLite database with tables that represent movies and user ratings.
