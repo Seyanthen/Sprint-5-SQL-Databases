@@ -6,6 +6,7 @@
 
 import sqlite3
 from pathlib import Path
+from contextlib import contextmanager
 
 # 1. Design the SQLite database schema.
 #    - Choose the database file location.
@@ -15,13 +16,35 @@ from pathlib import Path
 
 DATABASE_PATH = Path(__file__).parent / "movies.db"
 
+# Shared Movie Query
+MOVIE_WITH_RATING_QUERY = """
+    SELECT
+        movies.id,
+        movies.title,
+        movies.release_year,
+        movies.genre,
+        ratings.rating,
+        ratings.watched_date
+    FROM movies
+    LEFT JOIN ratings ON ratings.movie_id = movies.id
+"""
 
+
+@contextmanager
 def get_connection():
-    """Create a connection to the SQLite database."""
+    """Open a database connection and close it automatically."""
     connection = sqlite3.connect(DATABASE_PATH)
     connection.row_factory = sqlite3.Row  # Enable named column access
     connection.execute("PRAGMA foreign_keys = ON")  # Enable foreign key support
-    return connection
+
+    try:
+        yield connection
+        connection.commit()  # Commit changes if no exceptions occur
+    except Exception:
+        connection.rollback()  # Roll back changes on error
+        raise
+    finally:
+        connection.close()  # Ensure the connection is closed
 
 
 def initialize_database():
@@ -63,59 +86,38 @@ if __name__ == "__main__":
 
 def get_all_movies():
     """Return all movies with their ratings."""
+    query = MOVIE_WITH_RATING_QUERY + """
+        ORDER BY movies.title
+    """
+
     with get_connection() as connection:
-        cursor = connection.execute("""
-            SELECT
-                movies.id,
-                movies.title,
-                movies.release_year,
-                movies.genre,
-                ratings.rating,
-                ratings.watched_date
-            FROM movies
-            LEFT JOIN ratings ON ratings.movie_id = movies.id
-            ORDER BY movies.title
-        """)
+        cursor = connection.execute(query)
         return cursor.fetchall()
 
 
 def get_movie_by_id(movie_id):
     """Return one movie with rating information, or None."""
+    query = MOVIE_WITH_RATING_QUERY + """
+        WHERE movies.id = ?
+    """
+
     with get_connection() as connection:
-        cursor = connection.execute("""
-            SELECT
-                movies.id,
-                movies.title,
-                movies.release_year,
-                movies.genre,
-                ratings.rating,
-                ratings.watched_date
-            FROM movies
-            LEFT JOIN ratings ON ratings.movie_id = movies.id
-            WHERE movies.id = ?
-        """, (movie_id,))
+        cursor = connection.execute(query, (movie_id,))
         return cursor.fetchone()
 
 
 def search_movies(search_term):
-    """Search movie titles or genres"""
+    """Search movie titles or genres."""
     pattern = f"%{search_term}%"
 
+    query = MOVIE_WITH_RATING_QUERY + """
+        WHERE movies.title LIKE ?
+           OR movies.genre LIKE ?
+        ORDER BY movies.title
+    """
+    
     with get_connection() as connection:
-        cursor = connection.execute("""
-            SELECT
-                movies.id,
-                movies.title,
-                movies.release_year,
-                movies.genre,
-                ratings.rating,
-                ratings.watched_date
-            FROM movies
-            LEFT JOIN ratings ON ratings.movie_id = movies.id
-            WHERE movies.title LIKE ?
-               OR movies.genre LIKE ?
-            ORDER BY movies.title
-        """, (pattern, pattern))
+        cursor = connection.execute(query, (pattern, pattern))
         return cursor.fetchall()
 
 
@@ -123,6 +125,41 @@ def search_movies(search_term):
 #    - Validate required movie fields and rating values from 1 to 5.
 #    - Insert movies and ratings with parameterized SQL statements.
 #    - Use transactions, commit successful inserts, and roll back failures.   
+
+def add_movie(title, release_year=None, genre=None):
+    """Add a movie and return its generated ID."""
+    if not title or not title.strip():
+        raise ValueError("Movie title is required.")
+
+    with get_connection() as connection:
+        cursor = connection.execute("""
+            INSERT INTO movies (title, release_year, genre)
+            VALUES (?, ?, ?)
+            """,
+            (title.strip(), release_year, genre.strip() if genre else None)
+        )
+        return cursor.lastrowid
+
+
+def add_rating(movie_id, rating, watched_date=None):
+    """Add a rating for an existing movie."""
+    if not isinstance(rating, int) or not 1 <= rating <= 5:
+        raise ValueError("Rating must be an integer from 1 to 5.")
+
+    with get_connection() as connection:
+        # Check if the movie exists
+        cursor = connection.execute("SELECT id FROM movies WHERE id = ?", (movie_id,))
+        if cursor.fetchone() is None:
+            raise ValueError(f"Movie with ID {movie_id} does not exist.")
+
+        # Insert the rating
+        connection.execute("""
+            INSERT INTO ratings (movie_id, rating, watched_date)
+            VALUES (?, ?, ?)
+            """,
+            (movie_id, rating, watched_date)
+        )
+
 
 
 

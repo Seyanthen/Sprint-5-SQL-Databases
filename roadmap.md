@@ -83,9 +83,22 @@ After Step 3 adds movie and rating insertion functions, test the Step 2 query fu
 
 **Relevant considerations:** Use `UPDATE` statements with parameters and a `WHERE` clause based on the record ID. Check `cursor.rowcount` so the program can distinguish a successful update from a nonexistent record. Validate changed values using the same rules as inserts.
 
+**Testing task:** Create a test function that uses Python `assert` statements to verify the Step 3 insertion functions and the Step 4 update functions. Include successful inserts and updates, invalid input, nonexistent IDs, duplicate ratings, and confirmation that failed operations do not create unintended records.
+
 **Requirement satisfied:** Provides software that updates data in the database.
 
 **Suggested files or modules:** Add update functions to `movie_repository.py` or `database.py`; add update commands to the user interface in `main.py`.
+
+### Step 4 Testing Checkpoint
+
+Run the assert-based test function against an isolated test database and verify:
+
+- A valid movie and rating can be inserted.
+- Invalid movie and rating values are rejected.
+- A movie and rating can be updated successfully.
+- Updates to nonexistent IDs are reported correctly.
+- Duplicate ratings are rejected according to the schema.
+- Failed inserts and updates leave the database unchanged.
 
 ## 5. Delete Movies and Ratings
 
