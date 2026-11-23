@@ -38,7 +38,7 @@ The expected minimum amount of time each Sprint for each category is as follows:
 |11-20-26|10:15|TP |Team Work Day|60|
 |11-20-26|10:20|MTG|Stand Up Meeting|3|
 |11-20-26|11:45|IM |Update Database Records|60|
-||||||
+|11-23-26|9:15 |IM |Delete Movies and Rating & Rating Summaries|45|
 ||||||
 ||||||
 ||||||

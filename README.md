@@ -23,9 +23,10 @@ Steps to build and/or run the software:
 Instructions for using the software:
 
 1. Run `python main.py` to initialize the database.
-2. The database layer currently supports retrieving all movies, retrieving a movie by ID, searching by title or genre, adding movies, adding ratings, and updating movies and ratings.
-3. These functions can be called from Python code after importing `main.py`; an interactive menu or command-line interface has not been added yet.
-4. Do not commit the generated `movies.db` file to source control.
+2. The database layer currently supports retrieving all movies, retrieving a movie by ID, searching by title or genre, adding movies, adding ratings, updating movies and ratings, deleting movies and ratings, and calculating per-movie and catalog-wide rating summaries using `AVG` and `COUNT`.
+3. These functions can be called from Python code after importing `main.py`; an interactive command-line interface is not required because the project will provide a web interface in Step 7.
+4. Step 7 will provide browser-based confirmation before destructive delete actions.
+5. Do not commit the generated `movies.db` file to source control.
 
 ## Development Environment
 
@@ -53,6 +54,6 @@ The following items reflect the current roadmap status and planned improvements:
 * [x] Step 2: Add database query functions
 * [x] Step 3: Add movies and ratings
 * [x] Step 4: Update existing movies and ratings
-* [ ] Step 5: Delete movies and ratings
-* [ ] Step 6: Add aggregate rating summaries using `AVG` and `COUNT`
-* [ ] Step 7: Add an optional web interface and movie posters
+* [x] Step 5: Delete movies and ratings
+* [x] Step 6: Add aggregate rating summaries using `AVG` and `COUNT`
+* [ ] Step 7: Add the required web interface, delete confirmations, and movie posters

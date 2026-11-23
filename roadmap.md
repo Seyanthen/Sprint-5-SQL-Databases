@@ -4,7 +4,7 @@ This roadmap describes the planned implementation for the Python and SQLite movi
 
 ## Current Status
 
-Steps 1–4 are implemented. Step 4 has been verified with isolated assert-based tests covering successful updates, invalid input, nonexistent IDs, rating date preservation, and date clearing. The next implementation step is Step 5: deleting movies and ratings safely.
+Steps 1–6 are implemented. Steps 4–6 have been verified with isolated assert-based tests covering successful updates and deletions, invalid input, nonexistent IDs, rating date preservation, date clearing, cascading deletion of ratings when a movie is deleted, empty summaries, unrated movies, per-movie summaries, catalog summaries, and alphabetical ordering. Confirmation for destructive actions will be implemented as part of the required Step 7 web interface. The next implementation step is Step 7: adding the required web interface.
 
 ## 1. Design the SQLite Database Schema
 
@@ -112,7 +112,7 @@ Run the assert-based test function against an isolated test database and verify:
 
 - Create a function to delete a rating by ID.
 - Create a function to delete a movie by ID.
-- Ask for confirmation before destructive operations.
+- Defer user confirmation for destructive operations to the Step 7 web interface.
 - Decide whether deleting a movie should also delete its ratings through an explicit cleanup operation or a cascading foreign key.
 - Report whether the requested record was deleted.
 
@@ -120,7 +120,7 @@ Run the assert-based test function against an isolated test database and verify:
 
 **Requirement satisfied:** Provides software that deletes data from the database.
 
-**Suggested files or modules:** Add delete functions to `movie_repository.py` or `database.py`; add confirmation and delete commands to `main.py`; update the schema if cascading deletes are selected.
+**Suggested files or modules:** Add delete functions to `movie_repository.py` or `database.py`; implement delete confirmation in the Step 7 web interface; update the schema if cascading deletes are selected.
 
 ## 6. Add Aggregate Rating Summaries
 
@@ -140,20 +140,21 @@ Run the assert-based test function against an isolated test database and verify:
 
 **Suggested files or modules:** Add summary queries to `movie_repository.py` or a separate `reports.py`; add a summary option to `main.py`; document example output in `README.md` after implementation.
 
-## 7. Add an Optional Web Interface and External Movie Information
+## 7. Add the Required Web Interface and External Movie Information
 
-**Goal:** Provide a browser-based way to manage the database and optionally display movie posters or ratings from an external source.
+**Goal:** Provide a browser-based way to manage the database, including confirmation for destructive actions, and display movie posters or ratings from an external source when available.
 
 **Expected implementation tasks:**
 
-- Choose a lightweight Python web framework such as Flask if a web interface is desired.
+- Choose a lightweight Python web framework such as Flask.
 - Create routes or views for listing movies, viewing details, adding records, editing records, and deleting records.
+- Add a confirmation step for destructive actions before submitting delete requests.
 - Add a poster URL field or integrate a movie information API, subject to API terms and key requirements.
 - Display local ratings alongside any external ratings, clearly labeling the source.
 - Validate and sanitize form input, and keep API keys in environment variables rather than source control.
 
-**Relevant considerations:** Reuse the database/repository functions instead of duplicating SQL in route handlers. Use templates for presentation, handle network failures gracefully, and protect destructive actions with confirmation and appropriate request methods. This step is optional and should follow completion of the core database features.
+**Relevant considerations:** Reuse the database/repository functions instead of duplicating SQL in route handlers. Use templates for presentation, handle network failures gracefully, and protect destructive actions with confirmation and appropriate request methods. This required step should follow completion of the core database features.
 
-**Requirement satisfied:** Provides the optional web interface that can access movie posters and potentially other ratings.
+**Requirement satisfied:** Provides the required web interface that can access movie posters and potentially other ratings.
 
 **Suggested files or modules:** Add `app.py`, a `templates/` directory, a `static/` directory, and optionally `api_client.py` or `services/movie_metadata.py`. Update `README.md` with setup, API-key, and run instructions.

@@ -30,7 +30,7 @@ MOVIE_WITH_RATING_QUERY = """
 """
 
 
-@contextmanager
+@contextmanager     # Use context manager to handle database connections
 def get_connection():
     """Open a database connection and close it automatically."""
     connection = sqlite3.connect(DATABASE_PATH)
@@ -153,12 +153,13 @@ def add_rating(movie_id, rating, watched_date=None):
             raise ValueError(f"Movie with ID {movie_id} does not exist.")
 
         # Insert the rating
-        connection.execute("""
+        cursor = connection.execute("""
             INSERT INTO ratings (movie_id, rating, watched_date)
             VALUES (?, ?, ?)
             """,
             (movie_id, rating, watched_date)
         )
+        return cursor.lastrowid
 
 
 # 4. Update existing movies and ratings.
@@ -223,16 +224,28 @@ def update_rating(rating_id, rating, watched_date=_UNSET):
         return cursor.rowcount == 1
 
 
-# Temporary test cases:
-
-
 # 5. Delete movies and ratings.
 #    - Confirm destructive actions before deleting records.
 #    - Preserve referential integrity when deleting movies and related ratings.
 #    - Report whether the requested record was deleted.
 
+def delete_rating(rating_id):
+    """Delete a rating and return True if it existed."""
+    with get_connection() as connection:
+        cursor = connection.execute(
+            "DELETE FROM ratings WHERE id = ?",
+            (rating_id,)
+        )
+        return cursor.rowcount == 1
 
-
+def delete_movie(movie_id):
+    """Delete a movie and its ratings through ON DELETE CASCADE."""
+    with get_connection() as connection:
+        cursor = connection.execute(
+            "DELETE FROM movies WHERE id = ?",
+            (movie_id,)
+        )
+        return cursor.rowcount == 1
 
 
 # 6. Add aggregate rating summaries.
@@ -240,8 +253,51 @@ def update_rating(rating_id, rating, watched_date=_UNSET):
 #    - Optionally include minimum and maximum ratings.
 #    - Handle cases where no ratings exist.
 
+def get_movie_rating_summary(movie_id):
+    """Return the average and count of ratings for one movie"""
+    query = """
+        SELECT
+            movies.id,
+            movies.title,
+            AVG(ratings.rating) AS average_rating,
+            COUNT(ratings.rating) AS rating_count
+        FROM movies
+        LEFT JOIN ratings ON ratings.movie_id = movies.id
+        WHERE movies.id = ?
+        GROUP BY movies.id, movies.title
+    """
 
+    with get_connection() as connection:
+        return connection.execute(query, (movie_id,)).fetchone()
 
+def get_all_rating_summaries():
+    """Return rating summaries for every movie."""
+    query = """
+        SELECT
+            movies.id,
+            movies.title,
+            AVG(ratings.rating) AS average_rating,
+            COUNT(ratings.rating) AS rating_count
+        FROM movies
+        LEFT JOIN ratings ON ratings.movie_id = movies.id
+        GROUP BY movies.id, movies.title
+        ORDER BY movies.title
+    """
+
+    with get_connection() as connection:
+        return connection.execute(query).fetchall()
+
+def get_catalog_rating_summary():
+    """Return the average rating and total rating count."""
+    query = """
+        SELECT
+            AVG(ratings.rating) AS average_rating,
+            COUNT(ratings.rating) AS rating_count
+        FROM ratings
+    """
+
+    with get_connection() as connection:
+        return connection.execute(query).fetchone()
 
 
 # 7. Optional: add a web interface and external movie information.
