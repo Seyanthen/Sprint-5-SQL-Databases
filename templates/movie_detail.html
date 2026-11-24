@@ -1,0 +1,43 @@
+<!-- Single Movie Information User Interface -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ movie["title"] }}</title>
+</head>
+<body>
+    <p><a href="{{ url_for('index') }}">Back to catalog</a></p>
+
+    <h1>{{ movie["title"] }}</h1>
+
+    {% if movie["release_year"] %}
+        <p><strong>Release year:</strong> {{ movie["release_year"] }}</p>
+    {% endif %}
+
+    {% if movie["genre"] %}
+        <p><strong>Genre:</strong> {{ movie["genre"] }}</p>
+    {% endif %}
+
+    {% if movie["rating"] %}
+        <p><strong>Personal rating:</strong> {{ movie["rating"] }}/5</p>
+    {% else %}
+        <p><strong>Personal rating:</strong> Not rated</p>
+    {% endif %}
+
+    {% if movie["watched_date"] %}
+        <p><strong>Watched date:</strong> {{ movie["watched_date"] }}</p>
+    {% endif %}
+
+    <h2>Rating Summary</h2>
+
+    {% if summary["rating_count"] %}
+        <p>
+            Average rating:
+            {{ "%.1f"|format(summary["average_rating"]) }}/5
+        </p>
+        <p>Total ratings: {{ summary["rating_count"] }}</p>
+    {% else %}
+        <p>No ratings have been recorded.</p>
+    {% endif %}
+</body>
+</html>

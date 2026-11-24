@@ -17,17 +17,19 @@ Stretch Challenge:
 Steps to build and/or run the software:
 
 1. Install Python 3.x if it is not already installed.
-2. From the project directory, run `python main.py`.
-3. The program creates the local `movies.db` SQLite database and initializes the `movies` and `ratings` tables.
+2. Activate the project virtual environment with `.\\.venv\\Scripts\\Activate.ps1`.
+3. Install Flask in the virtual environment with `python -m pip install Flask` if it is not already installed.
+4. From the project directory, run `python app.py`.
+5. Open the local address shown by Flask, usually `http://127.0.0.1:5000/`. The application creates the local `movies.db` SQLite database and initializes the `movies` and `ratings` tables.
 
 Instructions for using the software:
 
-1. Run `python main.py` to initialize the database.
-2. The database layer currently supports retrieving all movies, retrieving a movie by ID, searching by title or genre, adding movies, adding ratings, updating movies and ratings, deleting movies and ratings, and calculating per-movie and catalog-wide rating summaries using `AVG` and `COUNT`.
-3. Input validation rejects blank titles, invalid genres, invalid release years, non-positive IDs, ratings outside 1 through 5, malformed watched dates, future watched dates, and invalid input types. Release years are optional; watched dates may be omitted or cleared.
-4. These functions can be called from Python code after importing `main.py`. An interactive command-line interface is not currently provided; the browser interface is planned for Step 7.
-5. Step 7 will provide browser-based confirmation before destructive delete actions.
-6. Do not commit the generated `movies.db` file to source control.
+1. Run `python app.py` to start the web interface and initialize the database.
+2. The browser interface currently displays the movie catalog, movie metadata, local ratings, watched dates, per-movie rating summaries, and title or genre search results.
+3. The database layer supports adding, updating, and deleting movies and ratings, as well as calculating per-movie and catalog-wide rating summaries using `AVG` and `COUNT`.
+4. Input validation rejects blank titles, invalid genres, invalid release years, non-positive IDs, ratings outside 1 through 5, malformed watched dates, future watched dates, and invalid input types. Release years are optional; watched dates may be omitted or cleared.
+5. Browser forms, delete confirmation, and external movie information remain planned for later Step 7 stages.
+6. Do not commit the generated `movies.db` file or API keys to source control.
 
 ## Development Environment
 
@@ -36,6 +38,8 @@ To recreate the development environment, you need the following software and/or 
 * Python 3.x
 * Python's built-in `sqlite3` library
 * SQLite database support, included with Python
+* Flask 3.x
+* A project virtual environment in `.venv`
 
 ## Useful Websites to Learn More
 
@@ -58,3 +62,10 @@ The following items reflect the current roadmap status and planned improvements:
 * [x] Step 5: Delete movies and ratings
 * [x] Step 6: Add aggregate rating summaries using `AVG` and `COUNT`
 * [ ] Step 7: Add the required web interface, delete confirmations, and movie posters
+  * [x] Stage 7.1: Create a minimal Flask shell and catalog page
+  * [x] Stage 7.2: Add movie details and title or genre search
+  * [ ] Stage 7.3: Add movie and rating forms
+  * [ ] Stage 7.4: Add editing and safe deletion with confirmation
+  * [ ] Stage 7.5: Add catalog summaries and basic presentation
+  * [ ] Stage 7.6: Add external movie information
+  * [ ] Stage 7.7: Refactor and document the web version

@@ -1,0 +1,54 @@
+<!-- Movie Database UI Experience -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Catalog</title>
+</head>
+<body>
+    <h1>Movie Catalog</h1>
+
+    <!-- Search Box and Function -->
+    <form method="get" action="{{ url_for('search') }}">
+        <label for="search">Search by title or genre:</label>
+        <input
+            type="search"
+            id="search"
+            name="q"
+            value="{{ search_term|default('') }}"
+        >
+        <button type="submit">Search</button>
+    </form>
+
+    {% if movies %}
+        <ul>
+            {% for movie in movies %}
+                <li>
+                    <a href="{{ url_for('movie_detail', movie_id=movie['id']) }}">
+                        <strong>{{ movie["title"] }}</strong>
+                    </a>
+                    {% if movie["release_year"] %}
+                        ({{ movie["release_year"] }})
+                    {% endif %}
+
+                    {% if movie["genre"] %}
+                        — {{ movie["genre"] }}
+                    {% endif %}
+
+                    {% if movie["rating"] %}
+                        — Rating: {{ movie["rating"] }}/5
+                    {% else %}
+                        — Not rated
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% if search_term %}
+            <p>No movies matched "{{ search_term }}".</p>
+        {% else %}
+            <p>No movies have been added yet.</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

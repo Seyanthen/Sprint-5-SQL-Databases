@@ -41,7 +41,7 @@ The expected minimum amount of time each Sprint for each category is as follows:
 |11-23-26|9:15 |IM |Delete Movies and Rating & Rating Summaries|45|
 |11-23-26|10:15|TP |Team Project Work Day (check Verify account persistence for remaning issues)|70|
 |11-24-26|12:30|IM |Input Validation Implementation and Testing|45|
-||||||
+|11-24-26|1:50 |IM |Step 7.1 Flask shell and Step 7.2 movie details, search, testing, and documentation|35|
 ||||||
 ||||||
 ||||||
@@ -57,7 +57,7 @@ _Note: Add more rows as needed._
 
 |Categroy                       |Total Time (Hours:Minutes)|
 |-------------------------------|:------------------------:|
-|IM - Individual Module         |          06:30           |
-|TP - Team Project              |          03:25           |
+|IM - Individual Module         |          07:05           |
+|TP - Team Project              |          04:25           |
 |MTG - Class Meetings           |          01:03           |
-|**TOTAL**                      |        **10:58**         |
+|**TOTAL**                      |        **12:33**         |

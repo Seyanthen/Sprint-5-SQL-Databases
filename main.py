@@ -2,6 +2,9 @@
     Joshua Adams - CSE 310
     Sprint 5 SQL Databases
     Movie Rating Database
+
+    main.py
+    This module implements a movie rating database using SQLite.
 """
 
 import sqlite3
