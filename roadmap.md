@@ -4,6 +4,8 @@ This roadmap describes the planned implementation for the Python and SQLite movi
 
 ## Current Status
 
+Status update: Steps 1-6 remain implemented. Core database operations and aggregate summaries have been verified with isolated temporary-database tests. Validation now covers required text fields, optional genres and release years, release-year bounds, positive record IDs, ratings from 1 through 5, ISO watched dates, future-date rejection, and invalid input types including booleans. The validation implementation and existing CRUD behavior passed isolated tests. Destructive-action confirmation remains deferred to the required Step 7 web interface.
+
 Steps 1–6 are implemented. Steps 4–6 have been verified with isolated assert-based tests covering successful updates and deletions, invalid input, nonexistent IDs, rating date preservation, date clearing, cascading deletion of ratings when a movie is deleted, empty summaries, unrated movies, per-movie summaries, catalog summaries, and alphabetical ordering. Confirmation for destructive actions will be implemented as part of the required Step 7 web interface. The next implementation step is Step 7: adding the required web interface.
 
 ## 1. Design the SQLite Database Schema

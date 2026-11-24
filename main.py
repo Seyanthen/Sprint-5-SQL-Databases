@@ -7,6 +7,7 @@
 import sqlite3
 from pathlib import Path
 from contextlib import contextmanager
+from datetime import date
 
 # 1. Design the SQLite database schema.
 #    - Choose the database file location.
@@ -30,7 +31,76 @@ MOVIE_WITH_RATING_QUERY = """
 """
 
 
-@contextmanager     # Use context manager to handle database connections
+# Validation Helper Functions
+MIN_RELEASE_YEAR = 1888  # The year of the first known film
+MAX_RELEASE_YEAR_OFFSET = 5
+
+def validate_title(title):
+    """Validate that the title is a non-empty string."""
+    if not isinstance(title, str) or not title.strip():
+        raise ValueError("Title must be a non-empty string.")
+    return title.strip()
+
+
+def validate_genre(genre):
+    """Validate that the genre is a string or None."""
+    if genre is not None and not isinstance(genre, str):
+        raise ValueError("Genre must be a string or None.")
+    return genre.strip() if genre else None
+
+
+def validate_release_year(release_year):
+    """Validate that the release year is optional and within a reasonable range."""
+    if release_year is None:
+        return None
+
+    if type(release_year) is not int:
+        raise ValueError("Release year must be an integer or None.")
+
+    maximum_year = date.today().year + MAX_RELEASE_YEAR_OFFSET
+    if not MIN_RELEASE_YEAR <= release_year <= maximum_year:
+        raise ValueError(
+            f"Release year must be between {MIN_RELEASE_YEAR} and {maximum_year}."
+        )
+
+    return release_year
+
+
+def validate_watched_date(watched_date):
+    """Validate that the watched date is a string in YYYY-MM-DD format or None."""
+    if watched_date is None:
+        return None
+
+    if not isinstance(watched_date, str):
+        raise ValueError("Watched date must be a string in YYYY-MM-DD format or None.")
+
+    try:
+        parsed_date = date.fromisoformat(watched_date)
+    except ValueError:
+        raise ValueError("Watched date must be in YYYY-MM-DD format.")
+
+    if parsed_date > date.today():
+        raise ValueError("Watched date cannot be in the future.")
+
+    return watched_date
+
+
+def validate_id(record_id, name="Record ID"):
+    """Validate that the record ID is a positive integer."""
+    if type(record_id) is not int or record_id <= 0:
+        raise ValueError(f"{name} must be a positive integer.")
+    return record_id
+
+
+def validate_rating(rating):
+    """Validate that the rating is an integer between 1 and 5."""
+    if type(rating) is not int or not 1 <= rating <= 5:
+        raise ValueError("Rating must be an integer from 1 to 5.")
+    return rating
+
+
+# Use context manager to handle database connections
+@contextmanager
 def get_connection():
     """Open a database connection and close it automatically."""
     connection = sqlite3.connect(DATABASE_PATH)
@@ -47,6 +117,7 @@ def get_connection():
         connection.close()  # Ensure the connection is closed
 
 
+# Initialize the database schema (runs only if the database file doesn't exist)
 def initialize_database():
     """Initialize the database schema if it doesn't exist."""
     with get_connection() as connection:
@@ -97,6 +168,8 @@ def get_all_movies():
 
 def get_movie_by_id(movie_id):
     """Return one movie with rating information, or None."""
+    movie_id = validate_id(movie_id, "Movie ID")
+
     query = MOVIE_WITH_RATING_QUERY + """
         WHERE movies.id = ?
     """
@@ -128,8 +201,9 @@ def search_movies(search_term):
 
 def add_movie(title, release_year=None, genre=None):
     """Add a movie and return its generated ID."""
-    if not title or not title.strip():
-        raise ValueError("Movie title is required.")
+    title = validate_title(title)
+    release_year = validate_release_year(release_year)
+    genre = validate_genre(genre)
 
     with get_connection() as connection:
         cursor = connection.execute("""
@@ -143,8 +217,9 @@ def add_movie(title, release_year=None, genre=None):
 
 def add_rating(movie_id, rating, watched_date=None):
     """Add a rating for an existing movie."""
-    if not isinstance(rating, int) or not 1 <= rating <= 5:
-        raise ValueError("Rating must be an integer from 1 to 5.")
+    movie_id = validate_id(movie_id, "Movie ID")
+    rating = validate_rating(rating)
+    watched_date = validate_watched_date(watched_date)
 
     with get_connection() as connection:
         # Check if the movie exists
@@ -168,11 +243,10 @@ def add_rating(movie_id, rating, watched_date=None):
 
 def update_movie(movie_id, title, release_year=None, genre=None):
     """Update a movie and return True if it existed."""
-    if not isinstance(title, str) or not title.strip():
-        raise ValueError("Movie title must be a non-empty string.")
-
-    if genre is not None and not isinstance(genre, str):
-        raise ValueError("Genre must be a string or None.")
+    movie_id = validate_id(movie_id)
+    title = validate_title(title)
+    release_year = validate_release_year(release_year)
+    genre = validate_genre(genre)
 
     with get_connection() as connection:
         cursor = connection.execute("""
@@ -192,12 +266,11 @@ def update_movie(movie_id, title, release_year=None, genre=None):
 _UNSET = object()  # Sentinel value for optional parameters
 def update_rating(rating_id, rating, watched_date=_UNSET):
     """Update a rating and return True if it existed."""
-    if type(rating) is not int or not 1 <= rating <= 5:
-        raise ValueError("Rating must be an integer from 1 to 5.")
+    rating_id = validate_id(rating_id, "Rating ID")
+    rating = validate_rating(rating)
 
     if watched_date is not _UNSET:
-        if watched_date is not None and not isinstance(watched_date, str):
-            raise ValueError("Watched date must be a string or None.")
+        watched_date = validate_watched_date(watched_date)
 
     with get_connection() as connection:
         if watched_date is _UNSET:
@@ -231,6 +304,8 @@ def update_rating(rating_id, rating, watched_date=_UNSET):
 
 def delete_rating(rating_id):
     """Delete a rating and return True if it existed."""
+    rating_id = validate_id(rating_id, "Rating ID")
+
     with get_connection() as connection:
         cursor = connection.execute(
             "DELETE FROM ratings WHERE id = ?",
@@ -240,6 +315,8 @@ def delete_rating(rating_id):
 
 def delete_movie(movie_id):
     """Delete a movie and its ratings through ON DELETE CASCADE."""
+    movie_id = validate_id(movie_id, "Movie ID")
+
     with get_connection() as connection:
         cursor = connection.execute(
             "DELETE FROM movies WHERE id = ?",
@@ -255,6 +332,8 @@ def delete_movie(movie_id):
 
 def get_movie_rating_summary(movie_id):
     """Return the average and count of ratings for one movie"""
+    movie_id = validate_id(movie_id, "Movie ID")
+
     query = """
         SELECT
             movies.id,

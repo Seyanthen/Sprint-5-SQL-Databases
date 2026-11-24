@@ -39,8 +39,8 @@ The expected minimum amount of time each Sprint for each category is as follows:
 |11-20-26|10:20|MTG|Stand Up Meeting|3|
 |11-20-26|11:45|IM |Update Database Records|60|
 |11-23-26|9:15 |IM |Delete Movies and Rating & Rating Summaries|45|
-||||||
-||||||
+|11-23-26|10:15|TP |Team Project Work Day (check Verify account persistence for remaning issues)|70|
+|11-24-26|12:30|IM |Input Validation Implementation and Testing|45|
 ||||||
 ||||||
 ||||||
@@ -57,7 +57,7 @@ _Note: Add more rows as needed._
 
 |Categroy                       |Total Time (Hours:Minutes)|
 |-------------------------------|:------------------------:|
-|IM - Individual Module         |          05:00           |
-|TP - Team Project              |          02:15           |
+|IM - Individual Module         |          06:30           |
+|TP - Team Project              |          03:25           |
 |MTG - Class Meetings           |          01:03           |
-|**TOTAL**                      |        **08:18**         |
+|**TOTAL**                      |        **10:58**         |
